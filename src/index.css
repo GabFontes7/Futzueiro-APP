@@ -1,0 +1,118 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap');
+@import 'tailwindcss';
+
+:root {
+  /* UT / Pack Opening — preto + ouro metálico */
+  --color-bg: #07070a;
+  --color-surface: #0e0e14;
+  --color-surface-elevated: #16161f;
+  --color-surface-card: #1a1a26;
+  --color-border: rgba(212, 175, 55, 0.22);
+  --color-border-strong: rgba(245, 197, 24, 0.45);
+
+  --color-accent: #f5c518;
+  --color-accent-soft: #d4af37;
+  --color-accent-dim: #8a7020;
+  --color-neon: #ffe566;
+
+  --color-text: #f5f2ea;
+  --color-text-muted: #9a9588;
+  --color-text-inverse: #0a0a0c;
+
+  --color-gold: #e8c547;
+  --color-gold-glow: rgba(232, 197, 71, 0.55);
+  --color-silver: #c8cdd4;
+  --color-silver-glow: rgba(200, 205, 212, 0.45);
+  --color-bronze: #c67b3c;
+  --color-bronze-glow: rgba(198, 123, 60, 0.5);
+
+  --font-display: 'Bebas Neue', Impact, 'Arial Narrow', sans-serif;
+  --font-body: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  --radius-card: 12px;
+  --shadow-glow-gold: 0 0 24px var(--color-gold-glow), 0 8px 28px rgba(0, 0, 0, 0.55);
+  --shadow-glow-silver: 0 0 20px var(--color-silver-glow), 0 8px 24px rgba(0, 0, 0, 0.5);
+  --shadow-glow-bronze: 0 0 18px var(--color-bronze-glow), 0 8px 22px rgba(0, 0, 0, 0.5);
+
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-top: env(safe-area-inset-top, 0px);
+
+  /* legado (compat scaffold) */
+  --color-pitch: #12121a;
+  --color-pitch-light: #1e1e2a;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  background-color: var(--color-bg);
+  background-image:
+    radial-gradient(ellipse 120% 80% at 50% -20%, rgba(245, 197, 24, 0.14), transparent 55%),
+    radial-gradient(ellipse 80% 50% at 100% 100%, rgba(212, 175, 55, 0.06), transparent 45%),
+    linear-gradient(180deg, #0a0a10 0%, #07070a 100%);
+  background-attachment: fixed;
+  color: var(--color-text);
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior: none;
+}
+
+#root {
+  max-width: 480px;
+  margin: 0 auto;
+  min-height: 100dvh;
+}
+
+h1,
+h2,
+h3,
+.font-display {
+  font-family: var(--font-display);
+  letter-spacing: 0.04em;
+  font-weight: 400;
+}
+
+/* Utilitários de cartinha */
+@layer utilities {
+  .card-tier-gold {
+    border-color: var(--color-gold);
+    box-shadow: var(--shadow-glow-gold);
+  }
+
+  .card-tier-silver {
+    border-color: var(--color-silver);
+    box-shadow: var(--shadow-glow-silver);
+  }
+
+  .card-tier-bronze {
+    border-color: var(--color-bronze);
+    box-shadow: var(--shadow-glow-bronze);
+  }
+
+  .panel-ut {
+    border: 1px solid var(--color-border);
+    background:
+      linear-gradient(160deg, rgba(245, 197, 24, 0.06), transparent 40%),
+      var(--color-surface-elevated);
+    border-radius: 16px;
+  }
+
+  .text-gradient-gold {
+    background: linear-gradient(180deg, #fff6c8 0%, var(--color-accent) 45%, var(--color-accent-soft) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+}
