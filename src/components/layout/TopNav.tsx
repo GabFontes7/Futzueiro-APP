@@ -23,7 +23,7 @@ export function TopNav() {
         <img
           src="/brand/logo-futzueiro.png"
           alt="Futzueiro Futebol Clube"
-          className="h-16 w-auto drop-shadow-[0_0_18px_var(--color-gold-glow)]"
+          className="h-20 w-auto object-contain drop-shadow-[0_0_18px_var(--color-gold-glow)]"
           draggable={false}
         />
         <p className="font-display text-xl tracking-[0.2em] text-gradient-gold">
