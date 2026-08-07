@@ -23,6 +23,10 @@ Guia completo do zero. Ordem recomendada: **1) Supabase → 2) GitHub → 3) Ver
 > **Atualização (fotos):** se o projeto já existia, rode também
 > `supabase/migrations/20260807150000_player_photos.sql` no SQL Editor
 > (cria coluna `photo_url` + bucket `player-photos`).
+>
+> **Atualização (partida/gols):** rode também
+> `supabase/migrations/20260807180000_partida_goals.sql`
+> (cria `match_days`, `pitch_games`, `goals` — Chuteira de Ouro).
 
 ### 1.2 Copiar as chaves da API
 

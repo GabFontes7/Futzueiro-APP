@@ -5,11 +5,17 @@ import { useI18n } from '@/i18n'
 const primaryTabs = [
   { to: '/jogadores', key: 'jogadores' as const, icon: Users },
   { to: '/novo-racha', key: 'novoRacha' as const, icon: Volleyball },
-  { to: '/cronometro', key: 'cronometro' as const, icon: Timer },
+  { to: '/partida', key: 'partida' as const, icon: Timer },
   { to: '/mais', key: 'mais' as const, icon: Menu },
 ]
 
-const moreRoutes = ['/mais', '/votacao', '/bola-de-ouro', '/historico']
+const moreRoutes = [
+  '/mais',
+  '/votacao',
+  '/bola-de-ouro',
+  '/historico',
+  '/chuteira-de-ouro',
+]
 
 export function TopNav() {
   const { t } = useI18n()
@@ -47,7 +53,10 @@ export function TopNav() {
               const isActive =
                 key === 'mais'
                   ? isMoreSection
-                  : pathname === to || pathname.startsWith(`${to}/`)
+                  : key === 'partida'
+                    ? pathname.startsWith('/partida') ||
+                      pathname.startsWith('/cronometro')
+                    : pathname === to || pathname.startsWith(`${to}/`)
 
               return [
                 'flex min-w-0 flex-1 flex-col items-center gap-0.5 rounded-xl px-1 py-2.5 text-[10px] font-semibold uppercase tracking-wide transition-all',

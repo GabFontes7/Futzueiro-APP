@@ -4,11 +4,12 @@ import { PlayersProvider } from '@/context/PlayersContext'
 import { RachaProvider } from '@/context/RachaContext'
 import { I18nProvider } from '@/i18n/I18nProvider'
 import { BolaDeOuroPage } from '@/pages/BolaDeOuroPage'
-import { CronometroPage } from '@/pages/CronometroPage'
+import { ChuteiraOuroPage } from '@/pages/ChuteiraOuroPage'
 import { HistoricoPage } from '@/pages/HistoricoPage'
 import { JogadoresPage } from '@/pages/JogadoresPage'
 import { MaisPage } from '@/pages/MaisPage'
 import { NovoRachaPage } from '@/pages/NovoRachaPage'
+import { PartidaPage } from '@/pages/PartidaPage'
 import { VotacaoPage } from '@/pages/VotacaoPage'
 import { PresencaStep } from '@/pages/racha/PresencaStep'
 import { ResumoStep } from '@/pages/racha/ResumoStep'
@@ -34,10 +35,12 @@ export default function App() {
                   <Route path="sorteio" element={<SorteioStep />} />
                   <Route path="resumo" element={<ResumoStep />} />
                 </Route>
-                <Route path="cronometro" element={<CronometroPage />} />
+                <Route path="partida" element={<PartidaPage />} />
+                <Route path="cronometro" element={<Navigate to="/partida" replace />} />
                 <Route path="mais" element={<MaisPage />} />
                 <Route path="votacao" element={<VotacaoPage />} />
                 <Route path="bola-de-ouro" element={<BolaDeOuroPage />} />
+                <Route path="chuteira-de-ouro" element={<ChuteiraOuroPage />} />
                 <Route path="historico" element={<HistoricoPage />} />
                 <Route path="*" element={<Navigate to="/jogadores" replace />} />
               </Route>

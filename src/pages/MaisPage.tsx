@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import {
   Award,
   ChevronRight,
+  Goal,
   History,
   type LucideIcon,
   Trophy,
@@ -41,6 +42,13 @@ export function MaisPage() {
       icon: Award,
       title: t.pages.mais.bolaDeOuro,
       hint: t.pages.mais.bolaDeOuroHint,
+    },
+    {
+      kind: 'link',
+      to: '/chuteira-de-ouro',
+      icon: Goal,
+      title: t.pages.mais.chuteiraOuro,
+      hint: t.pages.mais.chuteiraOuroHint,
     },
     {
       kind: 'link',
