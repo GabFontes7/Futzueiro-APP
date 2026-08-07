@@ -1,12 +1,13 @@
 # Cartinhas dos jogadores
 
-Coloque aqui um PNG por jogador. O nome do arquivo é gerado automaticamente a partir do **nome cadastrado**:
+Coloque aqui a **foto normal** de cada jogador (com fundo). O nome do arquivo é gerado a partir do **nome cadastrado**:
 
 | Nome no app   | Arquivo esperado      |
 |---------------|-----------------------|
+| Gabri         | `gabri.png`           |
+| Gui           | `gui.png`             |
+| Victão        | `victao.png`          |
 | João Silva    | `joao silva.png`      |
-| Pedro         | `pedro.png`           |
-| José Carlos   | `jose carlos.png`     |
 
 Regras:
 1. Minúsculas
@@ -14,7 +15,4 @@ Regras:
 3. Espaços preservados (um espaço entre palavras)
 4. Extensão `.png`
 
-Se o arquivo não existir, o app usa `default.png` automaticamente (`onError`) —
-carta FUT dourada com silhueta cabeça–ombros.
-
-Fotos de jogadores: PNG com **fundo removido** (sem template de cartinha). O app aplica a moldura/overall por cima.
+Se o arquivo não existir, o app usa `default.png` automaticamente (`onError`).
