@@ -2,6 +2,9 @@
 
 PWA mobile-first para organizar rachas de futebol. **Online-first** — Supabase é a única fonte da verdade.
 
+**App:** https://futzueiro-app.vercel.app  
+**Manual do usuário:** **[MANUAL.md](./MANUAL.md)**
+
 ## Stack
 
 - React + Vite + TypeScript + Tailwind CSS
