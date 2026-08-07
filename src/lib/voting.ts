@@ -365,16 +365,26 @@ export async function closeMatchVoting(
   const row = match as MatchRow
   if (!row.voting_open) return { ok: false, error: 'already_closed' }
 
-  let { data: votes, error: votesError } = await sb
-    .from('votes')
-    .select('player_id, picks')
-    .eq('match_id', matchId)
+  let votes: Array<{ player_id: string | null; picks?: PlayerId[] | null }> | null =
+    null
+  let votesError: { message: string } | null = null
 
-  if (votesError && votesError.message.includes('picks')) {
-    ;({ data: votes, error: votesError } = await sb
+  {
+    const first = await sb
       .from('votes')
-      .select('player_id')
-      .eq('match_id', matchId))
+      .select('player_id, picks')
+      .eq('match_id', matchId)
+    if (first.error && first.error.message.includes('picks')) {
+      const legacy = await sb
+        .from('votes')
+        .select('player_id')
+        .eq('match_id', matchId)
+      votes = legacy.data
+      votesError = legacy.error
+    } else {
+      votes = first.data
+      votesError = first.error
+    }
   }
 
   if (votesError) return { ok: false, error: votesError.message }
