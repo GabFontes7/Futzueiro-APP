@@ -14,4 +14,5 @@ Regras:
 3. Espaços preservados (um espaço entre palavras)
 4. Extensão `.png`
 
-Se o arquivo não existir, o app usa `default.png` automaticamente (`onError`).
+Se o arquivo não existir, o app usa `default.png` automaticamente (`onError`) —
+carta FUT dourada com silhueta cabeça–ombros.
