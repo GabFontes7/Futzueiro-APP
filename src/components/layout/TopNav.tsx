@@ -1,18 +1,19 @@
-import { NavLink } from 'react-router-dom'
-import { Award, History, Timer, Trophy, Users, Volleyball } from 'lucide-react'
+import { NavLink, useLocation } from 'react-router-dom'
+import { Menu, Timer, Users, Volleyball } from 'lucide-react'
 import { useI18n } from '@/i18n'
 
-const tabs = [
+const primaryTabs = [
   { to: '/jogadores', key: 'jogadores' as const, icon: Users },
   { to: '/novo-racha', key: 'novoRacha' as const, icon: Volleyball },
   { to: '/cronometro', key: 'cronometro' as const, icon: Timer },
-  { to: '/votacao', key: 'votacao' as const, icon: Trophy },
-  { to: '/bola-de-ouro', key: 'bolaDeOuro' as const, icon: Award },
-  { to: '/historico', key: 'historico' as const, icon: History },
+  { to: '/mais', key: 'mais' as const, icon: Menu },
 ]
+
+const moreRoutes = ['/mais', '/votacao', '/bola-de-ouro', '/historico']
 
 export function TopNav() {
   const { t } = useI18n()
+  const { pathname } = useLocation()
 
   return (
     <nav
@@ -35,19 +36,26 @@ export function TopNav() {
         </p>
       </div>
 
-      <div className="flex gap-0.5 px-1.5 pb-2">
-        {tabs.map(({ to, key, icon: Icon }) => (
+      <div className="flex gap-1 px-2 pb-2">
+        {primaryTabs.map(({ to, key, icon: Icon }) => (
           <NavLink
             key={to}
             to={to}
-            className={({ isActive }) =>
-              [
-                'flex min-w-0 flex-1 flex-col items-center gap-0.5 rounded-xl px-1 py-2 text-[9px] font-semibold uppercase tracking-wide transition-all',
+            className={() => {
+              const isMoreSection =
+                key === 'mais' && moreRoutes.some((route) => pathname.startsWith(route))
+              const isActive =
+                key === 'mais'
+                  ? isMoreSection
+                  : pathname === to || pathname.startsWith(`${to}/`)
+
+              return [
+                'flex min-w-0 flex-1 flex-col items-center gap-0.5 rounded-xl px-1 py-2.5 text-[10px] font-semibold uppercase tracking-wide transition-all',
                 isActive
                   ? 'border border-[var(--color-border-strong)] bg-[var(--color-surface-elevated)] text-[var(--color-accent)] shadow-[0_0_16px_rgba(245,197,24,0.2)]'
                   : 'border border-transparent text-[var(--color-text-muted)] hover:bg-white/5 hover:text-[var(--color-text)]',
               ].join(' ')
-            }
+            }}
           >
             <Icon className="size-4 shrink-0" strokeWidth={2} />
             <span className="max-w-full truncate leading-tight">{t.nav[key]}</span>

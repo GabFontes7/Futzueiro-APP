@@ -7,6 +7,7 @@ import { BolaDeOuroPage } from '@/pages/BolaDeOuroPage'
 import { CronometroPage } from '@/pages/CronometroPage'
 import { HistoricoPage } from '@/pages/HistoricoPage'
 import { JogadoresPage } from '@/pages/JogadoresPage'
+import { MaisPage } from '@/pages/MaisPage'
 import { NovoRachaPage } from '@/pages/NovoRachaPage'
 import { VotacaoPage } from '@/pages/VotacaoPage'
 import { PresencaStep } from '@/pages/racha/PresencaStep'
@@ -34,6 +35,7 @@ export default function App() {
                   <Route path="resumo" element={<ResumoStep />} />
                 </Route>
                 <Route path="cronometro" element={<CronometroPage />} />
+                <Route path="mais" element={<MaisPage />} />
                 <Route path="votacao" element={<VotacaoPage />} />
                 <Route path="bola-de-ouro" element={<BolaDeOuroPage />} />
                 <Route path="historico" element={<HistoricoPage />} />
