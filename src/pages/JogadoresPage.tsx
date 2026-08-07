@@ -6,7 +6,7 @@ import { EmptyState } from '@/components/ui/EmptyState'
 import { usePlayersContext } from '@/context/PlayersContext'
 import { isSupabaseConfigured } from '@/lib/supabase'
 import { useI18n } from '@/i18n'
-import type { Player, PlayerInput } from '@/types'
+import type { Player } from '@/types'
 
 export function JogadoresPage() {
   const { t } = useI18n()
@@ -30,7 +30,7 @@ export function JogadoresPage() {
     setEditing(null)
   }
 
-  const handleSubmit = async (input: PlayerInput) => {
+  const handleSubmit = async (input: Parameters<typeof addPlayer>[0]) => {
     if (editing) {
       await updatePlayer(editing.id, input)
       return
@@ -104,6 +104,7 @@ export function JogadoresPage() {
               <PlayerCard
                 name={player.name}
                 overall={player.overall}
+                photoUrl={player.photoUrl}
                 size="sm"
                 className="w-full max-w-[140px]"
               />

@@ -98,7 +98,11 @@ export const ptBR = {
         namePlaceholder: 'Ex.: João Silva',
         nameRequired: 'Informe o nome do jogador.',
         overall: 'Overall',
-        imageHint: 'A foto será carregada de',
+        addPhoto: 'Adicionar foto',
+        changePhoto: 'Trocar foto',
+        photoOptional: 'Opcional — sem foto usa a cartinha padrão.',
+        photoInvalid: 'Escolha um arquivo de imagem.',
+        photoUploadError: 'Não foi possível salvar a foto. Tente de novo.',
       },
     },
     votacao: {

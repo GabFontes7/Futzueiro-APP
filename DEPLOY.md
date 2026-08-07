@@ -20,6 +20,10 @@ Guia completo do zero. Ordem recomendada: **1) Supabase → 2) GitHub → 3) Ver
 3. Copie **todo** o conteúdo → cole no editor → **Run**
 4. Se aparecer sucesso (Success), as tabelas `players`, `racha_session`, `matches`, `votes` e `golden_ball_points` estão prontas.
 
+> **Atualização (fotos):** se o projeto já existia, rode também
+> `supabase/migrations/20260807150000_player_photos.sql` no SQL Editor
+> (cria coluna `photo_url` + bucket `player-photos`).
+
 ### 1.2 Copiar as chaves da API
 
 1. **Project Settings** (ícone de engrenagem) → **API**

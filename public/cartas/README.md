@@ -1,18 +1,15 @@
 # Cartinhas dos jogadores
 
-Coloque aqui a **foto normal** de cada jogador (com fundo). O nome do arquivo é gerado a partir do **nome cadastrado**:
+## Preferido: upload no app
+No cadastro/edição do jogador, use **Adicionar foto** / **Trocar foto**.
+A imagem vai para o Supabase Storage. Sem foto → `default.png`.
+
+## Legado (opcional)
+Ainda funciona colocar um PNG estático aqui pelo nome sanitizado:
 
 | Nome no app   | Arquivo esperado      |
 |---------------|-----------------------|
 | Gabri         | `gabri.png`           |
-| Gui           | `gui.png`             |
-| Victão        | `victao.png`          |
 | João Silva    | `joao silva.png`      |
 
-Regras:
-1. Minúsculas
-2. Sem acentos (`ã` → `a`, `é` → `e`, …)
-3. Espaços preservados (um espaço entre palavras)
-4. Extensão `.png`
-
-Se o arquivo não existir, o app usa `default.png` automaticamente (`onError`).
+Regras do legado: minúsculas, sem acentos, espaços preservados, extensão `.png`.

@@ -96,7 +96,11 @@ export const enUS: Messages = {
         namePlaceholder: 'Ex.: João Silva',
         nameRequired: 'Please enter the player name.',
         overall: 'Overall',
-        imageHint: 'Photo will be loaded from',
+        addPhoto: 'Add photo',
+        changePhoto: 'Change photo',
+        photoOptional: 'Optional — without a photo the default card is used.',
+        photoInvalid: 'Please choose an image file.',
+        photoUploadError: 'Could not save the photo. Try again.',
       },
     },
     votacao: {

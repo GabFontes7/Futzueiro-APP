@@ -5,9 +5,14 @@ import {
   insertPlayer,
   updatePlayerRemote,
 } from '@/lib/db/players'
+import { uploadPlayerPhoto } from '@/lib/db/playerPhotos'
 import { getSupabase, isSupabaseConfigured } from '@/lib/supabase'
 import { sortPlayersByName } from '@/lib/players'
 import type { Player, PlayerId, PlayerInput } from '@/types'
+
+export type PlayerFormPayload = PlayerInput & {
+  photoFile?: File | null
+}
 
 export function usePlayers() {
   const [players, setPlayers] = useState<Player[]>([])
@@ -55,25 +60,56 @@ export function usePlayers() {
 
   const sortedPlayers = useMemo(() => sortPlayersByName(players), [players])
 
-  const addPlayer = useCallback(async (input: PlayerInput) => {
+  const addPlayer = useCallback(async (payload: PlayerFormPayload) => {
+    const { photoFile, ...input } = payload
     const created = await insertPlayer(input)
-    if (created) {
-      setPlayers((prev) => sortPlayersByName([...prev, created]))
+    if (!created) return null
+
+    if (photoFile) {
+      const photoUrl = await uploadPlayerPhoto(created.id, photoFile)
+      if (photoUrl) {
+        const withPhoto = await updatePlayerRemote(created.id, {
+          name: created.name,
+          overall: created.overall,
+          photoUrl,
+        })
+        if (withPhoto) {
+          setPlayers((prev) => sortPlayersByName([...prev, withPhoto]))
+          return withPhoto
+        }
+      }
     }
+
+    setPlayers((prev) => sortPlayersByName([...prev, created]))
     return created
   }, [])
 
-  const updatePlayer = useCallback(async (id: PlayerId, input: PlayerInput) => {
-    const updated = await updatePlayerRemote(id, input)
-    if (updated) {
-      setPlayers((prev) =>
-        sortPlayersByName(
-          prev.map((player) => (player.id === id ? updated : player)),
-        ),
-      )
-    }
-    return updated
-  }, [])
+  const updatePlayer = useCallback(
+    async (id: PlayerId, payload: PlayerFormPayload) => {
+      const { photoFile, ...input } = payload
+      let photoUrl = input.photoUrl
+
+      if (photoFile) {
+        const uploaded = await uploadPlayerPhoto(id, photoFile)
+        if (!uploaded) return null
+        photoUrl = uploaded
+      }
+
+      const updated = await updatePlayerRemote(id, {
+        ...input,
+        ...(photoUrl !== undefined ? { photoUrl } : {}),
+      })
+      if (updated) {
+        setPlayers((prev) =>
+          sortPlayersByName(
+            prev.map((player) => (player.id === id ? updated : player)),
+          ),
+        )
+      }
+      return updated
+    },
+    [],
+  )
 
   const deletePlayer = useCallback(async (id: PlayerId) => {
     const ok = await deletePlayerRemote(id)

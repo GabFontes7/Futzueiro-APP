@@ -39,6 +39,21 @@ export function getPlayerImageSrcFromName(name: string): string {
   return `/cartas/${encodeURIComponent(fileName)}`
 }
 
+/**
+ * Resolve a arte da cartinha:
+ * 1) photoUrl do Supabase (upload do jogador)
+ * 2) /cartas/{nome}.png (legado estático)
+ * 3) onError no card → default.png
+ */
+export function resolvePlayerImageSrc(
+  name: string,
+  photoUrl?: string | null,
+): string {
+  const remote = photoUrl?.trim()
+  if (remote) return remote
+  return getPlayerImageSrcFromName(name)
+}
+
 export function sortPlayersByName<T extends { name: string }>(players: T[]): T[] {
   return [...players].sort((a, b) =>
     a.name.localeCompare(b.name, 'pt-BR', { sensitivity: 'base' }),
