@@ -10,12 +10,11 @@ export interface Player {
 
 export type GameMode = '5x5' | '6x6'
 
-export type TeamLabel = string // 'A' | 'B' | 'C' | ...
+export type TeamLabel = string
 
 export interface DrawAssignment {
   playerId: PlayerId
   team: TeamLabel | 'proximos'
-  /** Usado só no algoritmo — não exibir na UI */
   effectiveOverall: number
 }
 
@@ -30,22 +29,11 @@ export interface DrawResult {
   mode: GameMode
   teams: Record<TeamLabel, PlayerId[]>
   proximos: PlayerId[]
-  /** Médias com Overall base (visível) */
   teamAverages: Record<TeamLabel, number>
   assignments: DrawAssignment[]
-  /** Assinatura presença+modo que gerou este sorteio */
   configSignature?: string
-  /** Numeração sequencial desde o início do app (Jogo 1, 2, …) */
   gameNumber?: number
-  /** Candidatos à votação (snapshot de nomes) */
   candidates?: PlayerSnapshot[]
-}
-
-export interface VoteRecord {
-  drawId: string
-  playerId: PlayerId
-  deviceId: string
-  votedAt: string
 }
 
 export interface GoldenBallEntry {
@@ -60,11 +48,23 @@ export interface MatchVoteStatus {
   playedAt: string
   mode: GameMode
   votingOpen: boolean
+  votingClosesAt: string | null
   candidates: PlayerSnapshot[]
+  /** Quantidade de boletos (pessoas que votaram), não de picks */
   voteCount: number
 }
 
-/** Passos do fluxo Novo Racha (modalidade vive dentro de presença) */
+export type AwardKind = 'day' | 'month' | 'year'
+
+export interface AwardRecord {
+  kind: AwardKind
+  periodKey: string
+  playerId: PlayerId
+  playerName: string
+  points: number
+  matchId?: string | null
+}
+
 export type RachaStep = 'presenca' | 'sorteio' | 'resumo'
 
 export interface PlayerInput {
@@ -76,7 +76,6 @@ export interface RachaSession {
   presentIds: PlayerId[]
   mode: GameMode
   currentDraw: DrawResult | null
-  /** ID do sorteio cuja revelação pack opening já foi concluída/pulada */
   packOpeningCompletedDrawId: string | null
 }
 
@@ -87,3 +86,6 @@ export interface RachaLayout {
   proximosCount: number
   teamLabels: TeamLabel[]
 }
+
+export const MAX_DAY_PICKS = 3
+export const VOTING_DURATION_MS = 12 * 60 * 60 * 1000

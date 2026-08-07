@@ -36,21 +36,33 @@ create table if not exists matches (
   assignments jsonb not null default '[]'::jsonb,
   candidates jsonb not null default '[]'::jsonb,
   voting_open boolean not null default true,
+  voting_closes_at timestamptz,
   created_at timestamptz not null default now()
 );
 
 -- Upgrade se matches já existia sem estas colunas
 alter table matches add column if not exists team_averages jsonb not null default '{}'::jsonb;
 alter table matches add column if not exists assignments jsonb not null default '[]'::jsonb;
+alter table matches add column if not exists voting_closes_at timestamptz;
 
 create table if not exists votes (
   id uuid primary key default gen_random_uuid(),
   match_id uuid not null references matches (id) on delete cascade,
   device_id text not null,
-  player_id text not null,
+  user_id uuid,
+  player_id text,
+  picks jsonb not null default '[]'::jsonb,
   created_at timestamptz not null default now(),
   unique (match_id, device_id)
 );
+
+alter table votes add column if not exists user_id uuid;
+alter table votes add column if not exists picks jsonb not null default '[]'::jsonb;
+alter table votes alter column player_id drop not null;
+
+create unique index if not exists votes_match_user_uidx
+  on votes (match_id, user_id)
+  where user_id is not null;
 
 create table if not exists golden_ball_points (
   id uuid primary key default gen_random_uuid(),
@@ -95,6 +107,47 @@ drop policy if exists "gbp_select" on golden_ball_points;
 drop policy if exists "gbp_insert" on golden_ball_points;
 drop policy if exists "gbp_all" on golden_ball_points;
 create policy "gbp_all" on golden_ball_points for all using (true) with check (true);
+
+-- ─── Premiações (craque dia / mês / ano) ─────────────────
+create table if not exists awards (
+  id uuid primary key default gen_random_uuid(),
+  kind text not null check (kind in ('day', 'month', 'year')),
+  period_key text not null,
+  match_id uuid references matches (id) on delete set null,
+  player_id text not null,
+  player_name text not null,
+  points numeric(10, 4) not null default 0,
+  created_at timestamptz not null default now()
+);
+
+create unique index if not exists awards_day_uidx
+  on awards (kind, period_key, player_id, match_id)
+  where kind = 'day';
+
+create unique index if not exists awards_period_uidx
+  on awards (kind, period_key, player_id)
+  where kind in ('month', 'year');
+
+create index if not exists awards_kind_period_idx on awards (kind, period_key);
+
+alter table awards enable row level security;
+drop policy if exists "awards_all" on awards;
+create policy "awards_all" on awards for all using (true) with check (true);
+
+create table if not exists monthly_scores (
+  id uuid primary key default gen_random_uuid(),
+  year integer not null,
+  month integer not null check (month between 1 and 12),
+  player_id text not null,
+  player_name text not null,
+  points numeric(10, 4) not null default 0,
+  updated_at timestamptz not null default now(),
+  unique (year, month, player_id)
+);
+
+alter table monthly_scores enable row level security;
+drop policy if exists "monthly_scores_all" on monthly_scores;
+create policy "monthly_scores_all" on monthly_scores for all using (true) with check (true);
 
 -- Realtime (ignore erro se já estiver na publication)
 do $$

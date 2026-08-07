@@ -1,4 +1,5 @@
 import { getSupabase } from '@/lib/supabase'
+import { VOTING_DURATION_MS } from '@/types'
 import type { DrawResult, GameMode, PlayerSnapshot } from '@/types'
 
 interface MatchRow {
@@ -12,6 +13,7 @@ interface MatchRow {
   assignments: DrawResult['assignments'] | null
   candidates: PlayerSnapshot[]
   voting_open: boolean
+  voting_closes_at?: string | null
 }
 
 export function matchRowToDraw(row: MatchRow): DrawResult {
@@ -67,11 +69,16 @@ export async function publishMatch(draw: DrawResult): Promise<{
     return { ok: false, error: 'Sorteio sem número de jogo' }
   }
 
+  const playedAt = draw.date || new Date().toISOString()
+  const closesAt = new Date(
+    new Date(playedAt).getTime() + VOTING_DURATION_MS,
+  ).toISOString()
+
   const { error } = await sb.from('matches').upsert(
     {
       id: draw.id,
       game_number: draw.gameNumber,
-      played_at: draw.date,
+      played_at: playedAt,
       mode: draw.mode,
       teams: draw.teams,
       proximos: draw.proximos,
@@ -79,6 +86,7 @@ export async function publishMatch(draw: DrawResult): Promise<{
       assignments: draw.assignments,
       candidates: draw.candidates ?? [],
       voting_open: true,
+      voting_closes_at: closesAt,
     },
     { onConflict: 'id' },
   )

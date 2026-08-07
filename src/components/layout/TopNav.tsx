@@ -19,7 +19,7 @@ export function TopNav() {
       style={{ paddingTop: 'var(--safe-top)' }}
       aria-label="Navegação principal"
     >
-      <div className="flex flex-col items-center gap-1 px-4 pt-3 pb-2">
+      <div className="relative flex flex-col items-center gap-1 px-4 pt-3 pb-2">
         <img
           src="/brand/logo-futzueiro.png"
           alt="Futzueiro Futebol Clube"
