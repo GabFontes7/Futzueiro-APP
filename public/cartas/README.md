@@ -16,3 +16,5 @@ Regras:
 
 Se o arquivo não existir, o app usa `default.png` automaticamente (`onError`) —
 carta FUT dourada com silhueta cabeça–ombros.
+
+Fotos de jogadores: PNG com **fundo removido** (sem template de cartinha). O app aplica a moldura/overall por cima.
