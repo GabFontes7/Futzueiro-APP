@@ -9,7 +9,7 @@ export const enUS: Messages = {
   nav: {
     jogadores: 'Players',
     novoRacha: 'Draft',
-    votacao: 'Vote',
+    votacao: 'Star',
     bolaDeOuro: 'Golden Ball',
     historico: 'History',
   },
@@ -100,10 +100,11 @@ export const enUS: Messages = {
       },
     },
     votacao: {
-      title: 'Player of the Day',
+      title: 'Player of the Match',
       subtitle: 'Pick up to 3 names. Voting closes in 12 hours.',
       empty: 'No open vote right now.',
-      emptyHint: 'Finish a draft in Summary to open voting for 12h.',
+      emptyHint:
+        'In Draft: attendance → draw → summary → Finalize. That opens Player of the Match for 12h.',
       needsConfig: 'Supabase not configured',
       needsConfigHint:
         'Create a .env with VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY (see .env.example).',
@@ -117,14 +118,14 @@ export const enUS: Messages = {
     },
     bolaDeOuro: {
       title: 'Golden Ball',
-      subtitle: 'Player of the day · month · year {year}',
+      subtitle: 'Player of the match · month · year {year}',
       openVotingHint: 'Game {game} open · {count} ballot(s) · closes in 12h',
       monthBoard: 'Player of the month (live)',
       monthEmpty: 'No votes this month yet.',
       yearBoard: 'Player of the year (monthly titles)',
       yearEmpty: 'No monthly champions this year yet.',
       monthChampions: 'Monthly champions',
-      recentDays: 'Recent players of the day',
+      recentDays: 'Recent players of the match',
       dayLabel: 'Game {n}',
       noWinner: 'No winner',
       votesUnit: 'pts',

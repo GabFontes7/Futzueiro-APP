@@ -9,7 +9,7 @@ import type {
   PlayerId,
   PlayerSnapshot,
 } from '@/types'
-import { MAX_DAY_PICKS } from '@/types'
+import { MAX_DAY_PICKS, VOTING_DURATION_MS } from '@/types'
 
 interface MatchRow {
   id: string
@@ -18,7 +18,7 @@ interface MatchRow {
   mode: string
   candidates: PlayerSnapshot[]
   voting_open: boolean
-  voting_closes_at: string | null
+  voting_closes_at?: string | null
 }
 
 interface VoteRow {
@@ -40,6 +40,13 @@ function periodMonth(iso: string): { year: number; month: number; key: string } 
   return { year, month, key: `${year}-${String(month).padStart(2, '0')}` }
 }
 
+function resolveClosesAt(row: MatchRow): string {
+  if (row.voting_closes_at) return row.voting_closes_at
+  return new Date(
+    new Date(row.played_at).getTime() + VOTING_DURATION_MS,
+  ).toISOString()
+}
+
 function mapMatchStatus(row: MatchRow, voteCount: number): MatchVoteStatus {
   return {
     matchId: row.id,
@@ -47,11 +54,12 @@ function mapMatchStatus(row: MatchRow, voteCount: number): MatchVoteStatus {
     playedAt: row.played_at,
     mode: row.mode as GameMode,
     votingOpen: row.voting_open,
-    votingClosesAt: row.voting_closes_at,
+    votingClosesAt: resolveClosesAt(row),
     candidates: row.candidates ?? [],
     voteCount,
   }
 }
+
 
 async function countBallots(matchId: string): Promise<number> {
   const sb = getSupabase()
@@ -91,8 +99,7 @@ export async function ensureVotingDeadline(
 
   if (
     row.voting_open &&
-    row.voting_closes_at &&
-    new Date(row.voting_closes_at).getTime() <= Date.now()
+    new Date(resolveClosesAt(row)).getTime() <= Date.now()
   ) {
     await closeMatchVoting(matchId)
     const { data: refreshed } = await sb
@@ -202,6 +209,23 @@ export async function castBallot(params: {
   })
 
   if (error) {
+    // Migration ainda não aplicada: grava só o 1º pick no schema antigo
+    if (
+      error.message.includes('picks') ||
+      error.message.includes('user_id') ||
+      error.code === 'PGRST204'
+    ) {
+      const legacy = await sb.from('votes').insert({
+        match_id: params.matchId,
+        device_id: params.deviceId,
+        player_id: unique[0],
+      })
+      if (legacy.error) {
+        if (legacy.error.code === '23505') return { ok: false, error: 'already_voted' }
+        return { ok: false, error: legacy.error.message }
+      }
+      return { ok: true }
+    }
     if (error.code === '23505') return { ok: false, error: 'already_voted' }
     return { ok: false, error: error.message }
   }
@@ -341,10 +365,17 @@ export async function closeMatchVoting(
   const row = match as MatchRow
   if (!row.voting_open) return { ok: false, error: 'already_closed' }
 
-  const { data: votes, error: votesError } = await sb
+  let { data: votes, error: votesError } = await sb
     .from('votes')
     .select('player_id, picks')
     .eq('match_id', matchId)
+
+  if (votesError && votesError.message.includes('picks')) {
+    ;({ data: votes, error: votesError } = await sb
+      .from('votes')
+      .select('player_id')
+      .eq('match_id', matchId))
+  }
 
   if (votesError) return { ok: false, error: votesError.message }
 

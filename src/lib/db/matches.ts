@@ -74,22 +74,31 @@ export async function publishMatch(draw: DrawResult): Promise<{
     new Date(playedAt).getTime() + VOTING_DURATION_MS,
   ).toISOString()
 
-  const { error } = await sb.from('matches').upsert(
-    {
-      id: draw.id,
-      game_number: draw.gameNumber,
-      played_at: playedAt,
-      mode: draw.mode,
-      teams: draw.teams,
-      proximos: draw.proximos,
-      team_averages: draw.teamAverages,
-      assignments: draw.assignments,
-      candidates: draw.candidates ?? [],
-      voting_open: true,
-      voting_closes_at: closesAt,
-    },
+  const base = {
+    id: draw.id,
+    game_number: draw.gameNumber,
+    played_at: playedAt,
+    mode: draw.mode,
+    teams: draw.teams,
+    proximos: draw.proximos,
+    team_averages: draw.teamAverages,
+    assignments: draw.assignments,
+    candidates: draw.candidates ?? [],
+    voting_open: true,
+  }
+
+  // Tenta com voting_closes_at; se a migration ainda não rodou, grava sem a coluna.
+  let { error } = await sb.from('matches').upsert(
+    { ...base, voting_closes_at: closesAt },
     { onConflict: 'id' },
   )
+
+  if (
+    error &&
+    (error.message.includes('voting_closes_at') || error.code === 'PGRST204')
+  ) {
+    ;({ error } = await sb.from('matches').upsert(base, { onConflict: 'id' }))
+  }
 
   if (error) return { ok: false, error: error.message }
   return { ok: true }

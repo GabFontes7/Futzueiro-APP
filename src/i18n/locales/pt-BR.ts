@@ -11,7 +11,7 @@ export const ptBR = {
   nav: {
     jogadores: 'Jogadores',
     novoRacha: 'Draft',
-    votacao: 'Votar',
+    votacao: 'Craque',
     bolaDeOuro: 'Bola Ouro',
     historico: 'Histórico',
   },
@@ -102,10 +102,11 @@ export const ptBR = {
       },
     },
     votacao: {
-      title: 'Craque do Dia',
+      title: 'Craque da Partida',
       subtitle: 'Escolha até 3 nomes. Votação fecha em 12 horas.',
       empty: 'Nenhuma votação aberta no momento.',
-      emptyHint: 'Finalize um draft no Resumo para abrir a votação por 12h.',
+      emptyHint:
+        'No Draft: presença → sorteio → resumo → Finalizar. Aí abre o Craque da Partida por 12h.',
       needsConfig: 'Supabase não configurado',
       needsConfigHint:
         'Crie o arquivo .env com VITE_SUPABASE_URL e VITE_SUPABASE_ANON_KEY (veja .env.example).',
@@ -119,14 +120,14 @@ export const ptBR = {
     },
     bolaDeOuro: {
       title: 'Bola de Ouro',
-      subtitle: 'Craque do dia · mês · ano {year}',
+      subtitle: 'Craque da partida · mês · ano {year}',
       openVotingHint: 'Jogo {game} aberto · {count} boleto(s) · fecha em 12h',
       monthBoard: 'Craque do mês (em andamento)',
       monthEmpty: 'Ainda sem votos neste mês.',
       yearBoard: 'Craque do ano (títulos mensais)',
       yearEmpty: 'Ainda sem craques do mês neste ano.',
       monthChampions: 'Craques do mês (oficiais)',
-      recentDays: 'Craques do dia (recentes)',
+      recentDays: 'Craques da partida (recentes)',
       dayLabel: 'Jogo {n}',
       noWinner: 'Sem vencedor',
       votesUnit: 'pts',
