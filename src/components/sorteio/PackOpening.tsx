@@ -133,6 +133,7 @@ export function PackOpening({
                 <PlayerCard
                   name={player.name}
                   overall={player.overall}
+                  photoUrl={player.photoUrl}
                   size="lg"
                   className="pointer-events-none shadow-[0_20px_50px_rgba(0,0,0,0.55)]"
                 />

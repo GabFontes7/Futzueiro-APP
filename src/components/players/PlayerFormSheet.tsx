@@ -1,15 +1,17 @@
-import { useEffect, useMemo, useState, type FormEvent } from 'react'
+import { useEffect, useId, useRef, useState, type FormEvent } from 'react'
+import { ImagePlus } from 'lucide-react'
 import { PlayerCard } from '@/components/cards/PlayerCard'
 import { BottomSheet } from '@/components/ui/BottomSheet'
-import { clampOverall, getPlayerImageFileName } from '@/lib/players'
-import type { Player, PlayerInput } from '@/types'
+import { clampOverall } from '@/lib/players'
+import type { Player } from '@/types'
+import type { PlayerFormPayload } from '@/hooks/usePlayers'
 import { useI18n } from '@/i18n'
 
 interface PlayerFormSheetProps {
   open: boolean
   player?: Player | null
   onClose: () => void
-  onSubmit: (input: PlayerInput) => void | Promise<void>
+  onSubmit: (input: PlayerFormPayload) => void | Promise<void>
 }
 
 const DEFAULT_OVERALL = 70
@@ -21,9 +23,13 @@ export function PlayerFormSheet({
   onSubmit,
 }: PlayerFormSheetProps) {
   const { t } = useI18n()
+  const fileInputId = useId()
+  const fileRef = useRef<HTMLInputElement>(null)
   const isEditing = Boolean(player)
   const [name, setName] = useState('')
   const [overall, setOverall] = useState(DEFAULT_OVERALL)
+  const [photoFile, setPhotoFile] = useState<File | null>(null)
+  const [previewSrc, setPreviewSrc] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [saving, setSaving] = useState(false)
 
@@ -31,12 +37,37 @@ export function PlayerFormSheet({
     if (!open) return
     setName(player?.name ?? '')
     setOverall(player?.overall ?? DEFAULT_OVERALL)
+    setPhotoFile(null)
+    setPreviewSrc(null)
     setError(null)
     setSaving(false)
+    if (fileRef.current) fileRef.current.value = ''
   }, [open, player])
 
+  useEffect(() => {
+    if (!photoFile) {
+      setPreviewSrc(null)
+      return
+    }
+    const url = URL.createObjectURL(photoFile)
+    setPreviewSrc(url)
+    return () => URL.revokeObjectURL(url)
+  }, [photoFile])
+
   const previewName = name.trim() || 'Jogador'
-  const expectedFile = useMemo(() => getPlayerImageFileName(previewName), [previewName])
+
+  const handleFileChange = (file: File | null) => {
+    if (!file) {
+      setPhotoFile(null)
+      return
+    }
+    if (!file.type.startsWith('image/')) {
+      setError(t.pages.jogadores.form.photoInvalid)
+      return
+    }
+    setError(null)
+    setPhotoFile(file)
+  }
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault()
@@ -51,8 +82,11 @@ export function PlayerFormSheet({
       await onSubmit({
         name: trimmed,
         overall: clampOverall(overall),
+        photoFile: photoFile ?? undefined,
       })
       onClose()
+    } catch {
+      setError(t.pages.jogadores.form.photoUploadError)
     } finally {
       setSaving(false)
     }
@@ -65,14 +99,37 @@ export function PlayerFormSheet({
       onClose={onClose}
     >
       <form className="flex flex-col gap-5" onSubmit={(e) => void handleSubmit(e)}>
-        <div className="flex justify-center">
-          <PlayerCard name={previewName} overall={overall} size="md" />
-        </div>
+        <div className="flex flex-col items-center gap-3">
+          <PlayerCard
+            name={previewName}
+            overall={overall}
+            photoUrl={player?.photoUrl}
+            previewSrc={previewSrc}
+            size="md"
+          />
 
-        <p className="text-center text-[11px] text-[var(--color-text-muted)]">
-          {t.pages.jogadores.form.imageHint}{' '}
-          <span className="font-mono text-[var(--color-accent-soft)]">/cartas/{expectedFile}</span>
-        </p>
+          <input
+            ref={fileRef}
+            id={fileInputId}
+            type="file"
+            accept="image/*"
+            capture="environment"
+            className="sr-only"
+            onChange={(event) => handleFileChange(event.target.files?.[0] ?? null)}
+          />
+          <label
+            htmlFor={fileInputId}
+            className="inline-flex cursor-pointer items-center gap-2 rounded-xl border border-[var(--color-border)] bg-black/30 px-3 py-2 text-xs font-semibold text-[var(--color-accent)] transition-colors hover:bg-white/5"
+          >
+            <ImagePlus className="size-3.5" />
+            {photoFile || player?.photoUrl
+              ? t.pages.jogadores.form.changePhoto
+              : t.pages.jogadores.form.addPhoto}
+          </label>
+          <p className="text-center text-[11px] text-[var(--color-text-muted)]">
+            {t.pages.jogadores.form.photoOptional}
+          </p>
+        </div>
 
         <label className="flex flex-col gap-2">
           <span className="text-xs font-semibold uppercase tracking-[0.16em] text-[var(--color-accent-soft)]">

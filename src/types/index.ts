@@ -4,6 +4,8 @@ export interface Player {
   id: PlayerId
   name: string
   overall: number
+  /** URL pública no Supabase Storage; null = usa default /cartas */
+  photoUrl: string | null
   createdAt: string
   updatedAt: string
 }
@@ -70,6 +72,8 @@ export type RachaStep = 'presenca' | 'sorteio' | 'resumo'
 export interface PlayerInput {
   name: string
   overall: number
+  /** URL pública após upload; omitir para manter a atual */
+  photoUrl?: string | null
 }
 
 export interface RachaSession {

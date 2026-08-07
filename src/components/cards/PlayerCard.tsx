@@ -2,15 +2,18 @@ import { useEffect, useState, type KeyboardEvent } from 'react'
 import {
   DEFAULT_CARD_IMAGE,
   getCardTier,
-  getPlayerImageSrcFromName,
+  resolvePlayerImageSrc,
 } from '@/lib/players'
 
 export type CardSize = 'sm' | 'md' | 'lg'
 
 interface PlayerCardProps {
-  /** Nome do jogador — a imagem é resolvida em /cartas/{nome-sanitizado}.png */
   name: string
   overall: number
+  /** Foto enviada pelo jogador (Supabase). Se vazia, tenta /cartas e depois default. */
+  photoUrl?: string | null
+  /** Preview local (blob:) ao escolher arquivo no formulário */
+  previewSrc?: string | null
   size?: CardSize
   showOverallBadge?: boolean
   className?: string
@@ -30,19 +33,20 @@ const tierClass = {
 } as const
 
 /**
- * Cartinha estilo UT: arte completa em /public/cartas/.
- * src derivado do nome; onError → default.png.
- * Borda/glow Ouro · Prata · Bronze conforme overall.
+ * Cartinha estilo UT.
+ * prioridade: previewSrc → photoUrl → /cartas/{nome}.png → default.png (onError)
  */
 export function PlayerCard({
   name,
   overall,
+  photoUrl = null,
+  previewSrc = null,
   size = 'md',
   showOverallBadge = true,
   className = '',
   onClick,
 }: PlayerCardProps) {
-  const resolvedSrc = getPlayerImageSrcFromName(name)
+  const resolvedSrc = previewSrc?.trim() || resolvePlayerImageSrc(name, photoUrl)
   const [src, setSrc] = useState(resolvedSrc)
   const tier = getCardTier(overall)
 
