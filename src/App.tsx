@@ -4,6 +4,7 @@ import { PlayersProvider } from '@/context/PlayersContext'
 import { RachaProvider } from '@/context/RachaContext'
 import { I18nProvider } from '@/i18n/I18nProvider'
 import { BolaDeOuroPage } from '@/pages/BolaDeOuroPage'
+import { CronometroPage } from '@/pages/CronometroPage'
 import { HistoricoPage } from '@/pages/HistoricoPage'
 import { JogadoresPage } from '@/pages/JogadoresPage'
 import { NovoRachaPage } from '@/pages/NovoRachaPage'
@@ -32,6 +33,7 @@ export default function App() {
                   <Route path="sorteio" element={<SorteioStep />} />
                   <Route path="resumo" element={<ResumoStep />} />
                 </Route>
+                <Route path="cronometro" element={<CronometroPage />} />
                 <Route path="votacao" element={<VotacaoPage />} />
                 <Route path="bola-de-ouro" element={<BolaDeOuroPage />} />
                 <Route path="historico" element={<HistoricoPage />} />

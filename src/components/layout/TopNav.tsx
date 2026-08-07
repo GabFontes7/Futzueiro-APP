@@ -1,10 +1,11 @@
 import { NavLink } from 'react-router-dom'
-import { Award, History, Trophy, Users, Volleyball } from 'lucide-react'
+import { Award, History, Timer, Trophy, Users, Volleyball } from 'lucide-react'
 import { useI18n } from '@/i18n'
 
 const tabs = [
   { to: '/jogadores', key: 'jogadores' as const, icon: Users },
   { to: '/novo-racha', key: 'novoRacha' as const, icon: Volleyball },
+  { to: '/cronometro', key: 'cronometro' as const, icon: Timer },
   { to: '/votacao', key: 'votacao' as const, icon: Trophy },
   { to: '/bola-de-ouro', key: 'bolaDeOuro' as const, icon: Award },
   { to: '/historico', key: 'historico' as const, icon: History },
