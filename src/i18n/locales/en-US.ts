@@ -182,6 +182,7 @@ export const enUS: Messages = {
       goalsTitle: 'Goals this match',
       goalsEmpty: 'No goals yet.',
       undo: 'Undo',
+      undoLast: 'Undo last goal ({name})',
       start: 'Start',
       pause: 'Pause',
       reset: 'Reset',

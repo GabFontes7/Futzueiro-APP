@@ -587,25 +587,42 @@ export function PartidaPage() {
             </div>
 
             {!gameEnded && (
-              <div className="mt-4 grid grid-cols-2 gap-2">
-                <button
-                  type="button"
-                  disabled={busy}
-                  onClick={() => openGoalPicker('home')}
-                  className="flex items-center justify-center gap-2 rounded-xl border border-[var(--color-border-strong)] bg-[var(--color-surface-elevated)] px-3 py-3.5 text-sm font-bold text-[var(--color-accent)]"
-                >
-                  <CircleDot className="size-4" />
-                  {t.pages.partida.goalHome}
-                </button>
-                <button
-                  type="button"
-                  disabled={busy}
-                  onClick={() => openGoalPicker('away')}
-                  className="flex items-center justify-center gap-2 rounded-xl border border-[var(--color-border-strong)] bg-[var(--color-surface-elevated)] px-3 py-3.5 text-sm font-bold text-[var(--color-accent)]"
-                >
-                  <CircleDot className="size-4" />
-                  {t.pages.partida.goalAway}
-                </button>
+              <div className="mt-4 flex flex-col gap-2">
+                <div className="grid grid-cols-2 gap-2">
+                  <button
+                    type="button"
+                    disabled={busy}
+                    onClick={() => openGoalPicker('home')}
+                    className="flex items-center justify-center gap-2 rounded-xl border border-[var(--color-border-strong)] bg-[var(--color-surface-elevated)] px-3 py-3.5 text-sm font-bold text-[var(--color-accent)]"
+                  >
+                    <CircleDot className="size-4" />
+                    {t.pages.partida.goalHome}
+                  </button>
+                  <button
+                    type="button"
+                    disabled={busy}
+                    onClick={() => openGoalPicker('away')}
+                    className="flex items-center justify-center gap-2 rounded-xl border border-[var(--color-border-strong)] bg-[var(--color-surface-elevated)] px-3 py-3.5 text-sm font-bold text-[var(--color-accent)]"
+                  >
+                    <CircleDot className="size-4" />
+                    {t.pages.partida.goalAway}
+                  </button>
+                </div>
+
+                {goals[0] && (
+                  <button
+                    type="button"
+                    disabled={busy}
+                    onClick={() => void undoGoal(goals[0])}
+                    className="flex w-full items-center justify-center gap-2 rounded-xl border border-red-500/40 bg-red-500/10 px-3 py-3 text-sm font-bold text-red-300 transition-colors hover:bg-red-500/15 active:scale-[0.99]"
+                  >
+                    <Undo2 className="size-4" />
+                    {t.pages.partida.undoLast.replace(
+                      '{name}',
+                      goals[0].playerName,
+                    )}
+                  </button>
+                )}
               </div>
             )}
           </div>

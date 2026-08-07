@@ -184,6 +184,7 @@ export const ptBR = {
       goalsTitle: 'Gols desta partida',
       goalsEmpty: 'Nenhum gol ainda.',
       undo: 'Desfazer',
+      undoLast: 'Desfazer último gol ({name})',
       start: 'Iniciar',
       pause: 'Pausar',
       reset: 'Zerar',
